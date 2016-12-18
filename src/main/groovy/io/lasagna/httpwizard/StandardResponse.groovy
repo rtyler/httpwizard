@@ -19,7 +19,9 @@
 package io.lasagna.httpwizard
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MultivaluedMap
+import javax.ws.rs.core.UriInfo
 
 /**
  *
@@ -30,4 +32,12 @@ class StandardResponse {
 
     @JsonProperty
     String uri
+
+
+    static StandardResponse fromRequest(UriInfo info, HttpHeaders headers) {
+        StandardResponse r = new StandardResponse()
+        r.uri = info.absolutePath
+        r.headers = headers.requestHeaders
+        return r
+    }
 }

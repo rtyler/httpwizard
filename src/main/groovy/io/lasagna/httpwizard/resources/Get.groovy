@@ -20,30 +20,52 @@ package io.lasagna.httpwizard.resources
 
 import io.lasagna.httpwizard.StandardResponse
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+
+import com.google.common.base.Charsets
 import com.codahale.metrics.annotation.Metered
 import groovy.transform.TypeChecked
 import javax.ws.rs.core.Context
-import javax.ws.rs.core.UriInfo
 import javax.ws.rs.core.HttpHeaders
+import javax.ws.rs.core.MediaType
+//import javax.ws.rs.core.Response
+import javax.ws.rs.core.UriInfo
+import javax.ws.rs.DefaultValue
 import javax.ws.rs.GET
+import javax.ws.rs.QueryParam
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import io.dropwizard.views.View
 
 @Path('/get')
-@Produces(MediaType.APPLICATION_JSON)
 @TypeChecked
 class GetResource {
 
     @GET
     @Path('200')
     @Metered
+    @Produces(MediaType.APPLICATION_JSON)
     StandardResponse returns200(@Context UriInfo ui,
                                 @Context HttpHeaders headers) {
-        StandardResponse r = new StandardResponse()
-        r.uri = ui.absolutePath
-        r.headers = headers.requestHeaders
-        return r
+        return StandardResponse.fromRequest(ui, headers)
     }
 
+    @GET
+    @Path('200')
+    @Metered
+    @Produces(MediaType.TEXT_HTML)
+    View returns200(@DefaultValue('true') @QueryParam('pretty') boolean pretty,
+                                @Context UriInfo ui,
+                                @Context HttpHeaders headers) {
+        return new View('/views/standard-response.mustache', Charsets.UTF_8) {
+            String getTitle() { return ui.path }
+            String getUri() { return ui.absolutePath }
+            String getJson() {
+                ObjectMapper mapper = new ObjectMapper()
+                mapper.enable(SerializationFeature.INDENT_OUTPUT)
+                return mapper.writeValueAsString(StandardResponse.fromRequest(ui, headers))
+            }
+        }
+    }
 }

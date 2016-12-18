@@ -31,6 +31,7 @@ repositories {
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:[2.4.7,2.5.0)'
     compile "io.dropwizard:dropwizard-core:${dropwizardVersion}"
+    compile "io.dropwizard:dropwizard-views-mustache:${dropwizardVersion}"
 
     testCompile "io.dropwizard:dropwizard-testing:${dropwizardVersion}"
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'

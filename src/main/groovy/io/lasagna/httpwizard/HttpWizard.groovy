@@ -21,9 +21,11 @@ package io.lasagna.httpwizard
 import io.lasagna.httpwizard.checks.VersionCheck
 import io.lasagna.httpwizard.resources.GetResource
 
+import com.google.common.collect.ImmutableMap
 import io.dropwizard.Application
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
+import io.dropwizard.views.ViewBundle
 
 /**
  * HttpWizard is the main Dropwizard application class
@@ -44,6 +46,11 @@ class HttpWizard extends Application<HttpWizardConfiguration> {
 
     @Override
     void initialize(Bootstrap<HttpWizardConfiguration> bootstrap) {
-        /* nothing to do yet */
+        bootstrap.addBundle(new ViewBundle<HttpWizardConfiguration>() {
+            @Override
+            ImmutableMap<String, ImmutableMap<String, String>> getViewConfiguration(HttpWizardConfiguration c) {
+                return c.viewRendererConfiguration
+            }
+        })
     }
 }
