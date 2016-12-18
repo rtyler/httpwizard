@@ -22,6 +22,8 @@ mainClassName = 'io.lasagna.httpwizard.HttpWizard'
 project.targetCompatibility = 1.8
 /**********************************************************************/
 
+defaultTasks 'check'
+
 repositories {
     jcenter()
 }
