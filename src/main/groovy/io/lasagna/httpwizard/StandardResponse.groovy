@@ -18,32 +18,16 @@
 
 package io.lasagna.httpwizard
 
-import io.lasagna.httpwizard.checks.VersionCheck
-import io.lasagna.httpwizard.resources.GetResource
-
-import io.dropwizard.Application
-import io.dropwizard.setup.Bootstrap
-import io.dropwizard.setup.Environment
+import com.fasterxml.jackson.annotation.JsonProperty
+import javax.ws.rs.core.MultivaluedMap
 
 /**
- * HttpWizard is the main Dropwizard application class
+ *
  */
-class HttpWizard extends Application<HttpWizardConfiguration> {
-    /** Run the HttpWizard application */
-    static void main(String[] args) throws Exception {
-        new HttpWizard().run(args)
-    }
+class StandardResponse {
+    @JsonProperty
+    MultivaluedMap<String, String> headers
 
-    @Override
-    void run(HttpWizardConfiguration configuration,
-                Environment env) {
-        env.healthChecks().register('sanity', new VersionCheck(configuration));
-
-        env.jersey().register(new GetResource())
-    }
-
-    @Override
-    void initialize(Bootstrap<HttpWizardConfiguration> bootstrap) {
-        /* nothing to do yet */
-    }
+    @JsonProperty
+    String uri
 }
