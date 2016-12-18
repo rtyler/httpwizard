@@ -16,31 +16,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package io.lasagna.httpwizard
+package io.lasagna.httpwizard.checks
 
-import io.lasagna.httpwizard.checks.VersionCheck
-
-import io.dropwizard.Application
-import io.dropwizard.setup.Bootstrap
-import io.dropwizard.setup.Environment
+import com.codahale.metrics.health.HealthCheck
+import com.codahale.metrics.health.HealthCheck.Result
 
 /**
- * HttpWizard is the main Dropwizard application class
+ * VersionCheck simple dumps the version of the running application
  */
-class HttpWizard extends Application<HttpWizardConfiguration> {
-    /** Run the HttpWizard application */
-    static void main(String[] args) throws Exception {
-        new HttpWizard().run(args)
-    }
+class VersionCheck extends HealthCheck {
 
     @Override
-    void run(HttpWizardConfiguration configuration,
-                Environment env) {
-        env.healthChecks().register('sanity', new VersionCheck());
-    }
-
-    @Override
-    void initialize(Bootstrap<HttpWizardConfiguration> bootstrap) {
-        /* nothing to do yet */
+    protected Result check() throws Exception {
+        return Result.healthy()
     }
 }
