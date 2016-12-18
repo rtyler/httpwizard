@@ -36,7 +36,7 @@ class HttpWizard extends Application<HttpWizardConfiguration> {
     @Override
     void run(HttpWizardConfiguration configuration,
                 Environment env) {
-        env.healthChecks().register('sanity', new VersionCheck());
+        env.healthChecks().register('sanity', new VersionCheck(configuration));
     }
 
     @Override

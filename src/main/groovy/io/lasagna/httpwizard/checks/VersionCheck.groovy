@@ -18,6 +18,8 @@
 
 package io.lasagna.httpwizard.checks
 
+import io.lasagna.httpwizard.HttpWizardConfiguration
+
 import com.codahale.metrics.health.HealthCheck
 import com.codahale.metrics.health.HealthCheck.Result
 
@@ -25,9 +27,14 @@ import com.codahale.metrics.health.HealthCheck.Result
  * VersionCheck simple dumps the version of the running application
  */
 class VersionCheck extends HealthCheck {
+    protected HttpWizardConfiguration config
+
+    VersionCheck(HttpWizardConfiguration c) {
+        this.config = c
+    }
 
     @Override
     protected Result check() throws Exception {
-        return Result.healthy()
+        return Result.healthy(this.config.appVersion)
     }
 }
