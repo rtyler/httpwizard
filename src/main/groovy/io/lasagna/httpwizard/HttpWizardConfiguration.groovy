@@ -18,27 +18,15 @@
 
 package io.lasagna.httpwizard
 
-import io.dropwizard.Application
-import io.dropwizard.setup.Bootstrap
-import io.dropwizard.setup.Environment
+import io.dropwizard.Configuration
+import org.hibernate.validator.constraints.NotEmpty
+
 
 /**
- * HttpWizard is the main Dropwizard application class
+ * HttpWizardConfiguration contains the basic configuration schema for the
+ * application
  */
-class HttpWizard extends Application<HttpWizardConfiguration> {
-    /** Run the HttpWizard application */
-    static void main(String[] args) throws Exception {
-        new HttpWizard().run(args)
-    }
-
-    @Override
-    void run(HttpWizardConfiguration configuration,
-                Environment env) {
-        /* nothing to do yet */
-    }
-
-    @Override
-    void initialize(Bootstrap<HttpWizardConfiguration> bootstrap) {
-        /* nothing to do yet */
-    }
+class HttpWizardConfiguration extends Configuration {
+    @NotEmpty
+    private String appVersion
 }

@@ -1,6 +1,26 @@
+plugins {
+    /* Used for generating version manifests for the applications */
+    id 'org.ajoberstar.grgit' version '1.6.0'
+    /* Used for rendering the documentation for the applications */
+    id 'org.asciidoctor.gradle.asciidoctor' version '1.5.1'
+}
 
+/* Application plugin for creating tarballs of our app */
+apply plugin: 'application'
+/* Groovy plugin sets up the tasks for building the Groovy app */
 apply plugin: 'groovy'
+/* Enforce code-style checks on the Groovy code */
 apply plugin: 'codenarc'
+
+
+/* Set some basic project properties */
+version       = '0.0.1'
+group         = 'io.lasagna'
+description   = 'HttpWizard is a simple application for playing with HTTP'
+mainClassName = 'io.lasagna.httpwizard.HttpWizard'
+/* Force our target compatibility to JDK8 always */
+project.targetCompatibility = 1.8
+/**********************************************************************/
 
 repositories {
     jcenter()
@@ -8,8 +28,7 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    // The production code uses the SLF4J logging API at compile time
-    compile 'org.slf4j:slf4j-api:1.7.18'
+    compile "io.dropwizard:dropwizard-core:${dropwizardVersion}"
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
