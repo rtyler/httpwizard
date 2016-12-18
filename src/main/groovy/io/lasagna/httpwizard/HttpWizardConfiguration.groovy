@@ -28,5 +28,5 @@ import org.hibernate.validator.constraints.NotEmpty
  */
 class HttpWizardConfiguration extends Configuration {
     @NotEmpty
-    private String appVersion
+    String appVersion
 }

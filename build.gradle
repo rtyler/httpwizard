@@ -36,3 +36,20 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
 }
+
+task generateExampleYaml {
+    def outputFile = "${buildDir}/httpwizard.example.yml"
+    group 'Build'
+    description "Generate ${outputFile} for running the app"
+    doLast {
+        file(outputFile).text = """---
+appVersion: "${project.version}-${grgit.head().abbreviatedId}"
+"""
+    }
+    outputs.file file(outputFile)
+}
+
+run {
+    args 'server', "${buildDir}/httpwizard.example.yml"
+    dependsOn generateExampleYaml
+}
