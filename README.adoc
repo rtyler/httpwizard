@@ -1,0 +1,39 @@
+= httpwizard
+
+HttpWizard is a
+link:http://dropwizard.io[Dropwizard]
+application built with
+link:http://groovy-lang.org[Groovy]
+which represents my current thinking for what an "ideal web application stack"
+looks like at this point in time (late-2016).
+
+
+
+== Tools
+
+
+* link:http://dropwizard.io[Dropwizard] - Itself using "the best" libraries for
+  implementing RESTful APIs on the JVM, e.g. Jersey and Jackson
+* link:http://groovy-lang.org[Groovy] - Concise and easy to write, support for
+  many dynamic language behaviors (closures, collection enumerations, dynamic
+  dispatch, etc).
+* link:http://gradle.org[Gradle] - Fast and easy to use build and dependency
+  declaration tool. Easily extended in Groovy, with a myriad of
+  link:http://plugins.gradle.org[plugins] to support various additional
+  use cases (e.g. building containers, invoking link:http://bower.io[Bower],
+  etc)
+* link:http://openjdk.java.net[OpenJDK] *see below*
+
+
+=== Java Virtual Machine
+
+Based on my _current thinking_, I believe the JVM serves as an ideal base for a
+modern web application. This is assuming Java Runtime Environment (JRE) 8 or
+higher. I believe the reasons for the JVM are fairly self-evident but in short:
+
+* High-performance threading and parallelism implementation
+* Supports numerous languages, with "Java" being the primitive language to
+  implement extensions which require additional speed
+* Library support for *practically* any protocol, format, etc
+* Easily tuned and monitored using off-the-shelf tools
+
