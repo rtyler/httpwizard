@@ -22,9 +22,21 @@ looks like at this point in time (late-2016).
   link:http://plugins.gradle.org[plugins] to support various additional
   use cases (e.g. building containers, invoking link:http://bower.io[Bower],
   etc)
-* link:http://openjdk.java.net[OpenJDK] *see below*
+* link:http://openjdk.java.net[OpenJDK] <<jvm, see below>>
 
 
+=== In-progress
+
+
+* link:http://hibernate.org/[Hibernate] - Mature, sometimes arcane, Java
+  persistence (DB) layer
+* link:https://facebook.github.io/react/[React] - Solid JavaScript library for
+  building user interfaces
+* link:http://docker.io[Docker] - A deployment packaging mechanism which can
+  deliver the app easily to a container service such as
+  link:http://kubernetes.io[Kubernetes].
+
+[[jvm]]
 === Java Virtual Machine
 
 Based on my _current thinking_, I believe the JVM serves as an ideal base for a
