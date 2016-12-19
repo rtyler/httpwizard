@@ -28,13 +28,17 @@ repositories {
     jcenter()
 }
 
-dependencies {
-    compile 'org.codehaus.groovy:groovy-all:[2.4.7,2.5.0)'
-    compile "io.dropwizard:dropwizard-core:${dropwizardVersion}"
-    compile "io.dropwizard:dropwizard-views-mustache:${dropwizardVersion}"
+configurations {
+    localJavadocs
+}
 
-    testCompile "io.dropwizard:dropwizard-testing:${dropwizardVersion}"
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+dependencies {
+    compile withSource('org.codehaus.groovy:groovy-all:[2.4.7,2.5.0)')
+    compile withSource("io.dropwizard:dropwizard-core:${dropwizardVersion}")
+    compile withSource("io.dropwizard:dropwizard-views-mustache:${dropwizardVersion}")
+
+    testCompile withSource("io.dropwizard:dropwizard-testing:${dropwizardVersion}")
+    testCompile withSource('org.spockframework:spock-core:1.0-groovy-2.4')
 }
 
 task generateExampleYaml {
@@ -62,4 +66,23 @@ test {
         exceptionFormat = 'full'
         events "passed", "skipped", "failed", "standardOut", "standardError"
     }
+}
+
+
+def withSource(String dependency) {
+    configurations.localJavadocs.dependencies.add(dependencies.create("${dependency}:sources"))
+    return dependency
+
+}
+
+task localdoc(type: Javadoc) {
+    group 'Documentation'
+    description 'Generate javadoc for the dependencies of the project'
+    destinationDir = file("${buildDir}/generated-docs")
+
+    source = configurations.localJavadocs.files.collect { sourceArtifact ->
+        zipTree(sourceArtifact).findAll { it.name.endsWith('java') }
+    }
+    title 'Generated Docs'
+    failOnError false
 }
