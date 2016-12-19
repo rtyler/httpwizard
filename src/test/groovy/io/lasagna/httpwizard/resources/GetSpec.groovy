@@ -18,8 +18,18 @@
 
 package io.lasagna.httpwizard.resources
 
+
+import io.lasagna.httpwizard.HttpWizard
+import io.lasagna.httpwizard.HttpWizardConfiguration
+
+import groovy.json.JsonSlurper
 import io.dropwizard.testing.junit.ResourceTestRule
+import io.dropwizard.testing.junit.DropwizardAppRule
+import io.dropwizard.testing.ResourceHelpers
 import javax.ws.rs.client.Client
+import org.glassfish.jersey.client.JerseyClientBuilder
+import javax.ws.rs.core.Response
+import javax.ws.rs.core.MediaType
 import org.junit.Rule
 import spock.lang.Specification
 
@@ -28,15 +38,68 @@ class GetSpec extends Specification {
     ResourceTestRule dropwizard = ResourceTestRule.builder()
                 .addResource(new GetResource()).build();
 
-    def "simple GET returns 200"() {
-        given:
-        Client client = dropwizard.client()
-        def response
+    Client client
 
+    def setup() {
+        client = dropwizard.client()
+    }
+
+    def "GET [application/json] returns 200"() {
         when:
-        response = dropwizard.client().target('/get/200').request().get()
+        def jerseyResponse = dropwizard.client().target('/get/200').request(MediaType.APPLICATION_JSON).get()
+        def data = jsonResponseToMap(jerseyResponse)
 
         then:
-        response.status == 200
+        jerseyResponse.status == 200
+        data instanceof Map
+        data.uri == '/get/200'
+    }
+
+    private Map jsonResponseToMap(Object response) {
+        return new JsonSlurper().parseText(
+            response.readEntity(String.class)
+        )
+    }
+}
+
+class GetViewSpec extends Specification {
+    @Rule
+    final DropwizardAppRule<HttpWizardConfiguration> app = new DropwizardAppRule<>(HttpWizard.class, ResourceHelpers.resourceFilePath('test-config.yml'))
+
+    Client client
+
+    def setup() {
+        client = JerseyClientBuilder.createClient()
+    }
+
+    def "GET [text/html] returns 200 and HTML"() {
+        when:
+        Response jerseyResponse = client.target(getFullPathOf('/get/200'))
+                .request(MediaType.TEXT_HTML)
+                .get()
+
+        then:
+        jerseyResponse.status == 200
+        isHtml(jerseyResponse)
+    }
+
+    def "GET [] returns 200 and HTML"() {
+        when:
+        Response jerseyResponse = client.target(getFullPathOf('/get/200'))
+                .request()
+                .get()
+
+        then:
+        jerseyResponse.status == 200
+        isHtml jerseyResponse
+    }
+
+    private String getFullPathOf(String path) {
+        return String.format('http://localhost:%d%s', app.localPort, path)
+    }
+
+    private boolean isHtml(Response response) {
+        String body = response.readEntity(String.class)
+        return body.findAll(/<\/html>/)?.size > 0
     }
 }

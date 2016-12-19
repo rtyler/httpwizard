@@ -33,9 +33,14 @@ class StandardResponse {
     @JsonProperty
     String uri
 
+    @JsonProperty
+    String description
 
-    static StandardResponse fromRequest(UriInfo info, HttpHeaders headers) {
+    static StandardResponse fromRequest(String description,
+                                        UriInfo info,
+                                        HttpHeaders headers) {
         StandardResponse r = new StandardResponse()
+        r.description = description
         r.uri = info.absolutePath
         r.headers = headers.requestHeaders
         return r

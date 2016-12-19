@@ -29,8 +29,8 @@ import groovy.transform.TypeChecked
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
-//import javax.ws.rs.core.Response
 import javax.ws.rs.core.UriInfo
+import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
 import javax.ws.rs.GET
 import javax.ws.rs.QueryParam
@@ -42,20 +42,14 @@ import io.dropwizard.views.View
 @TypeChecked
 class GetResource {
 
-    @GET
-    @Path('200')
-    @Metered
-    @Produces(MediaType.APPLICATION_JSON)
-    StandardResponse returns200(@Context UriInfo ui,
-                                @Context HttpHeaders headers) {
-        return StandardResponse.fromRequest(ui, headers)
-    }
+    final String DESCRIPTION_200 = 'Standard response for successful HTTP requests.'
 
     @GET
     @Path('200')
     @Metered
-    @Produces(MediaType.TEXT_HTML)
-    View returns200(@DefaultValue('true') @QueryParam('pretty') boolean pretty,
+    @Produces([MediaType.TEXT_HTML, MediaType.APPLICATION_XHTML_XML])
+    @Consumes([MediaType.TEXT_PLAIN, MediaType.TEXT_HTML])
+    View returns200WithHtml(@DefaultValue('true') @QueryParam('pretty') boolean pretty,
                                 @Context UriInfo ui,
                                 @Context HttpHeaders headers) {
         return new View('/views/standard-response.mustache', Charsets.UTF_8) {
@@ -64,8 +58,18 @@ class GetResource {
             String getJson() {
                 ObjectMapper mapper = new ObjectMapper()
                 mapper.enable(SerializationFeature.INDENT_OUTPUT)
-                return mapper.writeValueAsString(StandardResponse.fromRequest(ui, headers))
+                return mapper.writeValueAsString(StandardResponse.fromRequest(DESCRIPTION_200, ui, headers))
             }
         }
+    }
+
+    @GET
+    @Path('200')
+    @Metered
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    StandardResponse returns200(@Context UriInfo ui,
+                                @Context HttpHeaders headers) {
+        return StandardResponse.fromRequest(DESCRIPTION_200, ui, headers)
     }
 }
